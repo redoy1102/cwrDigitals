@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class ProductController extends Controller
@@ -27,12 +26,14 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'productCategory' => ['required', 'max:255'],
             'productName' => ['required', 'max:255'],
             'stock' => ['required', 'numeric'],
         ]);
 
         Product::create([
             'user_id' => Auth::id(),
+            'productCategory' => $validated['productCategory'],
             'productName' => $validated['productName'],
             'stock' => (int)$validated['stock'],
         ]);
@@ -44,15 +45,16 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         return Inertia::render('Products/Edit', [
-            'product'=>$product,
+            'product' => $product,
         ]);
     }
 
     public function update(Request $request, Product $product)
     {
         $validated = $request->validate([
+            'productCategory' => ['required', 'max:255'],
             'productName' => ['required', 'max:255'],
-            'stock' => ['required'],
+            'stock' => ['required', 'numeric'],
         ]);
 
         $product->update($request->all());

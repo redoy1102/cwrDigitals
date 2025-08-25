@@ -17,6 +17,7 @@ const breadcrumbs = [
 
 interface Product {
     id: number;
+    productCategory: string;
     productName: string;
     stock: number;
     sold: number;
@@ -53,6 +54,7 @@ export default function Products({ products }: ProductsProps) {
                         <Table>
                             <TableHeader>
                                 <TableRow>
+                                    <TableHead>Category</TableHead>
                                     <TableHead>Product Name</TableHead>
                                     <TableHead>Stock</TableHead>
                                     <TableHead>Sold</TableHead>
@@ -61,8 +63,20 @@ export default function Products({ products }: ProductsProps) {
                             </TableHeader>
                             <TableBody>
                                 {products.map((product) => {
+                                    const productCategoryLower = product.productCategory.toLowerCase();
                                     return (
                                         <TableRow key={product.id}>
+                                            <TableCell
+                                                className={
+                                                    productCategoryLower === 'youtube'
+                                                        ? 'font-bold text-red-600'
+                                                        : productCategoryLower === 'spotify'
+                                                          ? 'text-green-600'
+                                                          : ''
+                                                }
+                                            >
+                                                {product.productCategory}
+                                            </TableCell>
                                             <TableCell className="font-medium">{product.productName}</TableCell>
                                             <TableCell>{product.stock}</TableCell>
                                             <TableCell>{product.sold}</TableCell>
@@ -74,7 +88,7 @@ export default function Products({ products }: ProductsProps) {
                                                         </Button>
                                                     </DropdownMenuTrigger>
                                                     <DropdownMenuContent align="end">
-                                                        <DropdownMenuItem onClick={() => (window.location.href = `/products/${product.id}/edit`)}>
+                                                        <DropdownMenuItem onClick={() => router.visit(`/products/${product.id}/edit`)}>
                                                             <Edit className="mr-2 h-4 w-4" />
                                                             Edit
                                                         </DropdownMenuItem>

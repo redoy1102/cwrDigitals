@@ -2,6 +2,7 @@ import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Transition } from '@headlessui/react';
@@ -16,12 +17,20 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function CreateProduct() {
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const { data, setData, post, reset } = useForm({
+        productCategory: 'GPT', // Default to first option
         productName: '',
         stock: '',
     });
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        if (!data.productCategory) {
+            setData('productCategory', 'GPT'); // fallback to default
+        }
+
+        // Log form data for debugging
+        console.log('Submitting form data:', data);
+
         post('/products', {
             onSuccess: () => {
                 reset();
@@ -48,24 +57,46 @@ export default function CreateProduct() {
                 <Form method="post" action="/products" onSubmit={handleSubmit} className="space-y-6">
                     {({ processing, recentlySuccessful, errors }) => (
                         <>
-                            <div className="grid gap-2">
-                                <Label htmlFor="productName">Product name</Label>
+                            {/* Hidden input to ensure productCategory is included in form submission */}
+                            <input type="hidden" name="productCategory" value={data.productCategory} />
 
-                                <Input
-                                    id="productName"
-                                    className="mt-1 block w-full"
-                                    name="productName"
-                                    required
-                                    autoComplete="name"
-                                    placeholder="Product name"
-                                    value={data.productName}
-                                    onChange={(e) => setData('productName', e.target.value)}
-                                />
+                            <div className="flex justify-between items-center gap-4">
+                                <div className="w-full">
+                                    <Label htmlFor="productCategory">Product Category</Label>
+                                    <Select value={data.productCategory} onValueChange={(value) => setData('productCategory', value)} required>
+                                        <SelectTrigger className="mt-2 w-full" id="productCategory" name="productCategory">
+                                            <SelectValue placeholder="Select a category" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="GPT">GPT</SelectItem>
+                                            <SelectItem value="YouTube">YouTube</SelectItem>
+                                            <SelectItem value="Spotify">Spotify</SelectItem>
+                                            <SelectItem value="Netflix">Netflix</SelectItem>
+                                            <SelectItem value="Cursor">Cursor</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                    <InputError className="mt-2" message={errors.productCategory} />
+                                </div>
 
-                                <InputError className="mt-2" message={errors.productName} />
+                                <div className="w-full">
+                                    <Label htmlFor="productName">Product name</Label>
+
+                                    <Input
+                                        id="productName"
+                                        className="mt-1 block w-full"
+                                        name="productName"
+                                        required
+                                        autoComplete="name"
+                                        placeholder="Product name"
+                                        value={data.productName}
+                                        onChange={(e) => setData('productName', e.target.value)}
+                                    />
+
+                                    <InputError className="mt-2" message={errors.productName} />
+                                </div>
                             </div>
 
-                            <div className="grid gap-2">
+                            <div className="">
                                 <Label htmlFor="stock">Stock</Label>
 
                                 <Input
@@ -83,8 +114,8 @@ export default function CreateProduct() {
                                 <InputError className="mt-2" message={errors.stock} />
                             </div>
 
-                            <div className="flex items-center gap-4">
-                                <Button disabled={processing}>Save</Button>
+                            <div className="flex items-center gap-4 ">
+                                <Button disabled={processing} className='cursor-pointer'>Save</Button>
 
                                 <Transition
                                     show={recentlySuccessful}
