@@ -6,6 +6,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
 import { Edit, MoreHorizontal, Plus, Trash2 } from 'lucide-react';
+import { formateDate } from '@/lib/utils';
 // import { formateDate } from '@/lib/utils';
 
 const breadcrumbs = [
@@ -21,6 +22,7 @@ interface Product {
     productName: string;
     stock: number;
     sold: number;
+    created_at: string;
 }
 interface ProductsProps {
     products: Product[];
@@ -54,6 +56,7 @@ export default function Products({ products }: ProductsProps) {
                         <Table>
                             <TableHeader>
                                 <TableRow>
+                                    <TableHead>Created At</TableHead>
                                     <TableHead>Category</TableHead>
                                     <TableHead>Product Name</TableHead>
                                     <TableHead>Stock</TableHead>
@@ -66,6 +69,7 @@ export default function Products({ products }: ProductsProps) {
                                     const productCategoryLower = product.productCategory.toLowerCase();
                                     return (
                                         <TableRow key={product.id}>
+                                            <TableCell>{formateDate(product.created_at)}</TableCell>
                                             <TableCell
                                                 className={
                                                     productCategoryLower === 'youtube'
