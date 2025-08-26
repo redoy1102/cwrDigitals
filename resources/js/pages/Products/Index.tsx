@@ -5,8 +5,8 @@ import { Head, router } from '@inertiajs/react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
-import { Edit, MoreHorizontal, Plus, Trash2 } from 'lucide-react';
 import { formateDate } from '@/lib/utils';
+import { Edit, MoreHorizontal, Plus, Trash2 } from 'lucide-react';
 // import { formateDate } from '@/lib/utils';
 
 const breadcrumbs = [
@@ -56,6 +56,7 @@ export default function Products({ products }: ProductsProps) {
                         <Table>
                             <TableHeader>
                                 <TableRow>
+                                    <TableHead>ID</TableHead>
                                     <TableHead>Created At</TableHead>
                                     <TableHead>Category</TableHead>
                                     <TableHead>Product Name</TableHead>
@@ -69,6 +70,7 @@ export default function Products({ products }: ProductsProps) {
                                     const productCategoryLower = product.productCategory.toLowerCase();
                                     return (
                                         <TableRow key={product.id}>
+                                            <TableCell>{product.id}</TableCell>
                                             <TableCell>{formateDate(product.created_at)}</TableCell>
                                             <TableCell
                                                 className={

@@ -114,7 +114,7 @@ export default function EditProduct({ product }: { product: Product }) {
                             <div className="flex items-center gap-4">
                                 <Button disabled={processing} className="cursor-pointer">
                                     Update
-                                </Button>
+                                </Button> 
                                 <Transition
                                     show={recentlySuccessful}
                                     enter="transition ease-in-out"
