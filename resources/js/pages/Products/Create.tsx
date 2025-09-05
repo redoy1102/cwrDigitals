@@ -5,8 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { Transition } from '@headlessui/react';
-import { Form, Head, router, useForm } from '@inertiajs/react';
+import { Head, router, useForm } from '@inertiajs/react';
 import { List } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -16,27 +15,56 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function CreateProduct() {
-    const { data, setData, post, reset } = useForm({
-        productCategory: 'GPT', // Default to first option
+interface Product {
+    id: number;
+    productCategory: string;
+    productName: string;
+    stock: number;
+    sold: number;
+    created_at: string;
+}
+
+export default function CreateProduct({ products }: { products: Product[] }) {
+    console.log(products);
+
+    const { data, setData, post, reset, errors, processing } = useForm<{
+        productCategory: string;
+        productName: string;
+        stock: string;
+    }>({
+        productCategory: '', // Default to first option
         productName: '',
         stock: '',
     });
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (!data.productCategory) {
-            setData('productCategory', 'GPT'); // fallback to default
-        }
 
         // Log form data for debugging
         console.log('Submitting form data:', data);
 
-        post('/products', {
-            onSuccess: () => {
-                reset();
-                router.visit('/products');
-            },
-        });
+        if (confirm('Are you sure you want to add this product?')) {
+            post('/products', {
+                onSuccess: () => {
+                    reset();
+                },
+                onError: (errors) => {
+                    console.error('Form submission errors:', errors);
+                },
+            });
+        }
+    };
+
+    const handleCategoryChange = (value: string) => {
+        setData('productCategory', value);
+        if (value === 'GPT') {
+            setData('stock', '60');
+        } else if (value === 'YouTube' || value === 'Spotify') {
+            setData('stock', '5');
+        } else if (value === 'Cursor') {
+            setData('stock', '5');
+        } else {
+            setData('stock', '');
+        }
     };
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -54,82 +82,82 @@ export default function CreateProduct() {
                     </Button>
                 </div>
 
-                <Form method="post" action="/products" onSubmit={handleSubmit} className="space-y-6">
-                    {({ processing, recentlySuccessful, errors }) => (
-                        <>
-                            {/* Hidden input to ensure productCategory is included in form submission */}
-                            <input type="hidden" name="productCategory" value={data.productCategory} />
+                {/* Using basic form as I am using custom logic in submission logic */}
+                <form onSubmit={handleSubmit} className="space-y-6">
+                    {/* Hidden input to ensure productCategory is included in form submission */}
+                    <input type="hidden" name="productCategory" value={data.productCategory} />
 
-                            <div className="flex justify-between items-center gap-4">
-                                <div className="w-full">
-                                    <Label htmlFor="productCategory">Product Category</Label>
-                                    <Select value={data.productCategory} onValueChange={(value) => setData('productCategory', value)} required>
-                                        <SelectTrigger className="mt-2 w-full" id="productCategory" name="productCategory">
-                                            <SelectValue placeholder="Select a category" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="GPT">GPT</SelectItem>
-                                            <SelectItem value="YouTube">YouTube</SelectItem>
-                                            <SelectItem value="Spotify">Spotify</SelectItem>
-                                            <SelectItem value="Netflix">Netflix</SelectItem>
-                                            <SelectItem value="Cursor">Cursor</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                    <InputError className="mt-2" message={errors.productCategory} />
-                                </div>
+                    <div className="flex items-center justify-between gap-4">
+                        <div className="w-full">
+                            <Label htmlFor="productCategory">Product Category</Label>
+                            <Select value={data.productCategory} onValueChange={handleCategoryChange} required>
+                                <SelectTrigger className="mt-2 w-full" id="productCategory" name="productCategory">
+                                    <SelectValue placeholder="Select a category" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="GPT">GPT</SelectItem>
+                                    <SelectItem value="YouTube">YouTube</SelectItem>
+                                    <SelectItem value="Spotify">Spotify</SelectItem>
+                                    <SelectItem value="Netflix">Netflix</SelectItem>
+                                    <SelectItem value="Cursor">Cursor</SelectItem>
+                                </SelectContent>
+                            </Select>
+                            <InputError className="mt-2" message={errors.productCategory} />
+                        </div>
 
-                                <div className="w-full">
-                                    <Label htmlFor="productName">Product name</Label>
+                        <div className="w-full">
+                            <Label htmlFor="productName">Product name</Label>
 
-                                    <Input
-                                        id="productName"
-                                        className="mt-1 block w-full"
-                                        name="productName"
-                                        required
-                                        autoComplete="name"
-                                        placeholder="Product name"
-                                        value={data.productName}
-                                        onChange={(e) => setData('productName', e.target.value)}
-                                    />
+                            <Input
+                                id="productName"
+                                className="mt-1 block w-full"
+                                name="productName"
+                                required
+                                autoComplete="name"
+                                placeholder="Product name"
+                                value={data.productName}
+                                onChange={(e) => setData('productName', e.target.value)}
+                            />
 
-                                    <InputError className="mt-2" message={errors.productName} />
-                                </div>
-                            </div>
+                            <InputError className="mt-2" message={errors.productName} />
+                        </div>
+                    </div>
 
-                            <div className="">
-                                <Label htmlFor="stock">Stock</Label>
+                    <div className="">
+                        <Label htmlFor="stock">Stock</Label>
 
-                                <Input
-                                    id="stock"
-                                    type="number"
-                                    className="mt-1 block w-full"
-                                    name="stock"
-                                    required
-                                    autoComplete="stock"
-                                    placeholder="Stock"
-                                    value={data.stock}
-                                    onChange={(e) => setData('stock', e.target.value)}
-                                />
+                        <Input
+                            id="stock"
+                            type="number"
+                            className="mt-1 block w-full"
+                            name="stock"
+                            required
+                            autoComplete="stock"
+                            placeholder="Stock"
+                            value={data.stock}
+                            onChange={(e) => setData('stock', e.target.value)}
+                        />
 
-                                <InputError className="mt-2" message={errors.stock} />
-                            </div>
+                        <InputError className="mt-2" message={errors.stock} />
+                    </div>
 
-                            <div className="flex items-center gap-4 ">
-                                <Button disabled={processing} className='cursor-pointer'>Save</Button>
+                    <div className="flex items-center gap-4">
+                        <Button disabled={processing} className="cursor-pointer">
+                            {processing ? 'Saving...' : 'Save'}
+                        </Button>
 
-                                <Transition
-                                    show={recentlySuccessful}
-                                    enter="transition ease-in-out"
-                                    enterFrom="opacity-0"
-                                    leave="transition ease-in-out"
-                                    leaveTo="opacity-0"
-                                >
-                                    <p className="text-sm text-neutral-600">Saved</p>
-                                </Transition>
-                            </div>
-                        </>
-                    )}
-                </Form>
+                        {/* As I am redirecting to the index page it's not needed */}
+                        {/* <Transition
+                            show={recentlySuccessful}
+                            enter="transition ease-in-out"
+                            enterFrom="opacity-0"
+                            leave="transition ease-in-out"
+                            leaveTo="opacity-0"
+                        >
+                            <p className="text-sm text-neutral-600">Saved</p>
+                        </Transition> */}
+                    </div>
+                </form>
             </div>
         </AppLayout>
     );

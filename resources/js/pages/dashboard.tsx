@@ -1,6 +1,8 @@
 import AppLayout from '@/layouts/app-layout';
-import { router } from '@inertiajs/react';
-import { ArrowRight, BarChart3, FileText, Lightbulb, Package, PiggyBank, Receipt, ShoppingCart, TrendingUp, Wallet, Warehouse, Settings  } from 'lucide-react';
+import { SharedData } from '@/types';
+import { accessForAccountTeam, accessForSellTeam } from '@/types/userRole';
+import { router, usePage } from '@inertiajs/react';
+import { ArrowRight, BarChart3, FileText, Lightbulb, Package, PiggyBank, Receipt, ShoppingCart, TrendingUp, Wallet, Warehouse } from 'lucide-react';
 
 const breadcrumbs = [
     {
@@ -10,34 +12,73 @@ const breadcrumbs = [
 ];
 
 export default function Dashboard() {
+    const { auth } = usePage<SharedData>().props;
+    const loggedInUserEmail = auth.user.email;
+    console.log(loggedInUserEmail);
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <div className="p-3">
                 {/* Header Section */}
-                <div className="mt-3 mb-8">
-                    <h1 className="mb-2 text-4xl font-bold text-gray-900">Welcome Back!</h1>
-                    <p className="text-lg text-gray-600">Manage your business from one central dashboard</p>
-                </div>
+                <DashboardHeader title="Welcome Back!" subtitle="Manage your business from one central dashboard" />
 
                 {/* Dashboard Grid */}
                 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
                     {dashboardRoutes.map((route, index) => {
                         const IconComponent = route.icon;
-                        return (
-                            <div
-                                key={index}
-                                onClick={() => router.visit(route.path)}
-                                className={`group relative overflow-hidden rounded-2xl bg-gradient-to-br ${route.color} ${route.hoverColor} cursor-pointer shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl`}
-                                role="button"
-                            >
-                                {/* Content */}
-                                <RouteDesign
-                                    icon={<IconComponent className="h-8 w-8" />}
-                                    routeName={route.name}
-                                    routeDescription={route.description}
-                                />
-                            </div>
-                        );
+                        const routeName = route.name;
+
+                        if(loggedInUserEmail === 'codewithredoy@gmail.com'){
+                            return (
+                                <div
+                                    key={index}
+                                    onClick={() => router.visit(route.path)}
+                                    className={`group relative overflow-hidden rounded-2xl bg-gradient-to-br ${route.color} ${route.hoverColor} cursor-pointer shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl`}
+                                    role="button"
+                                >
+                                    {/* Content */}
+                                    <RouteDesign
+                                        icon={<IconComponent className="h-8 w-8" />}
+                                        routeName={route.name}
+                                        routeDescription={route.description}
+                                    />
+                                </div>
+                            );
+                        }
+                        else if (loggedInUserEmail === 'account@cwr.com' && accessForAccountTeam.includes(routeName)) {
+                            return (
+                                <div
+                                    key={index}
+                                    onClick={() => router.visit(route.path)}
+                                    className={`group relative overflow-hidden rounded-2xl bg-gradient-to-br ${route.color} ${route.hoverColor} cursor-pointer shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl`}
+                                    role="button"
+                                >
+                                    {/* Content */}
+                                    <RouteDesign
+                                        icon={<IconComponent className="h-8 w-8" />}
+                                        routeName={route.name}
+                                        routeDescription={route.description}
+                                    />
+                                </div>
+                            );
+                        }
+                        else if (loggedInUserEmail === 'sell@cwr.com' && accessForSellTeam.includes(routeName)) {
+                            return (
+                                <div
+                                    key={index}
+                                    onClick={() => router.visit(route.path)}
+                                    className={`group relative overflow-hidden rounded-2xl bg-gradient-to-br ${route.color} ${route.hoverColor} cursor-pointer shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl`}
+                                    role="button"
+                                >
+                                    {/* Content */}
+                                    <RouteDesign
+                                        icon={<IconComponent className="h-8 w-8" />}
+                                        routeName={route.name}
+                                        routeDescription={route.description}
+                                    />
+                                </div>
+                            );
+                        }
                     })}
                 </div>
 
@@ -157,22 +198,26 @@ const dashboardRoutes = [
         hoverColor: 'hover:from-orange-600 hover:to-orange-800',
         description: 'Research & development',
     },
-    {
-        name: 'Settings',
-        path: '/settings',
-        icon: Settings,
-        color: 'from-purple-500 to-purple-700',
-        hoverColor: 'hover:from-purple-600 hover:to-purple-800',
-        description: 'Settings',
-    },
 ];
+
+interface DashboardHeaderProps {
+    title: string;
+    subtitle: string;
+}
+export const DashboardHeader = ({ title, subtitle }: DashboardHeaderProps) => {
+    return (
+        <div className="mt-3 mb-8">
+            <h1 className="mb-2 text-4xl font-bold text-gray-900">{title}</h1>
+            <p className="text-lg text-gray-600">{subtitle}</p>
+        </div>
+    );
+};
 
 interface RouteDesignProps {
     icon: React.ReactNode;
     routeName: string;
     routeDescription: string;
 }
-
 export const RouteDesign = ({ icon, routeName, routeDescription }: RouteDesignProps) => {
     return (
         <div className="p-6 text-white">

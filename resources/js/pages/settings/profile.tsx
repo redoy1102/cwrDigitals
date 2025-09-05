@@ -20,6 +20,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: boolean; status?: string }) {
     const { auth } = usePage<SharedData>().props;
+    // console.log(auth.user.email);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>

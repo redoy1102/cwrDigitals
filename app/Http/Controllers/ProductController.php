@@ -20,7 +20,9 @@ class ProductController extends Controller
     // Product add form page
     public function create()
     {
-        return Inertia::render('Products/Create');
+        return Inertia::render('Products/Create', [
+            'products' => Product::with('user')->get(),
+        ]);
     }
 
     public function store(Request $request)
@@ -38,7 +40,7 @@ class ProductController extends Controller
             'stock' => (int)$validated['stock'],
         ]);
 
-        return redirect()->route('products.index');
+        return redirect()->route('products.index')->with('success', 'Product created successfully.');
     }
 
     // Product edit form page
