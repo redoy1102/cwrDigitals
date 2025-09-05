@@ -21,8 +21,8 @@ RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 # Install Node dependencies and build assets
 RUN npm install && npm run build
 
-# Expose port 8000
-EXPOSE 8000
+# Expose port 10000
+EXPOSE 10000
 
 # Start Laravel's built-in server
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=10000"]
