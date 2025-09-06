@@ -32,5 +32,7 @@ COPY --from=node-builder /app/public /var/www/html/public
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache || true \
  && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache || true
 
+# ...existing code...
 EXPOSE 10000
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=10000"]
+# use shell form so ${PORT} is expanded by the runtime
+CMD ["sh", "-lc", "php artisan serve --host=0.0.0.0 --port=${PORT:-10000}"]
