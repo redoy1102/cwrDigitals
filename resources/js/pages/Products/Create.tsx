@@ -22,6 +22,7 @@ interface Product {
     productName: string;
     stock: number;
     sold: number;
+    price: number;
     created_at: string;
 }
 
@@ -32,10 +33,12 @@ export default function CreateProduct({ products }: { products: Product[] }) {
         productCategory: string;
         productName: string;
         stock: string;
+        price: string;
     }>({
         productCategory: '', // Default to first option
         productName: '',
         stock: '',
+        price: '',
     });
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -82,7 +85,7 @@ export default function CreateProduct({ products }: { products: Product[] }) {
                     {/* Hidden input to ensure productCategory is included in form submission */}
                     <input type="hidden" name="productCategory" value={data.productCategory} />
 
-                    <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+                    <div className="grid grid-cols-1 md:grid-cols-2 items-center justify-between gap-4">
                         {/* Product category */}
                         <div className="w-full">
                             <Label htmlFor="productCategory">Product Category</Label>
@@ -117,25 +120,42 @@ export default function CreateProduct({ products }: { products: Product[] }) {
 
                             <InputError className="mt-2" message={errors.productName} />
                         </div>
-                    </div>
+                        {/* Stock */}
+                        <div className="">
+                            <Label htmlFor="stock">Stock</Label>
 
-                    {/* Stock */}
-                    <div className="">
-                        <Label htmlFor="stock">Stock</Label>
+                            <Input
+                                id="stock"
+                                type="number"
+                                className="mt-1 block w-full"
+                                name="stock"
+                                required
+                                autoComplete="stock"
+                                placeholder="Stock"
+                                value={data.stock}
+                                onChange={(e) => setData('stock', e.target.value)}
+                            />
 
-                        <Input
-                            id="stock"
-                            type="number"
-                            className="mt-1 block w-full"
-                            name="stock"
-                            required
-                            autoComplete="stock"
-                            placeholder="Stock"
-                            value={data.stock}
-                            onChange={(e) => setData('stock', e.target.value)}
-                        />
+                            <InputError className="mt-2" message={errors.stock} />
+                        </div>
+                        {/* Price */}
+                        <div className="">
+                            <Label htmlFor="price">Price</Label>
 
-                        <InputError className="mt-2" message={errors.stock} />
+                            <Input
+                                id="price"
+                                type="number"
+                                className="mt-1 block w-full"
+                                name="price"
+                                required
+                                autoComplete="price"
+                                placeholder="Price"
+                                value={data.price}
+                                onChange={(e) => setData('price', e.target.value)}
+                            />
+
+                            <InputError className="mt-2" message={errors.price} />
+                        </div>
                     </div>
 
                     <div className="flex items-center gap-4">

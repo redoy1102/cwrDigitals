@@ -2,12 +2,12 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Head, router } from '@inertiajs/react';
 // import { Badge } from '@/components/ui/badge';
+import Header from '@/components/Header';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
 import { formateDate } from '@/lib/utils';
 import { Edit, MoreHorizontal, Plus, Trash2 } from 'lucide-react';
-import Header from '@/components/Header';
 // import { formateDate } from '@/lib/utils';
 
 const breadcrumbs = [
@@ -23,6 +23,7 @@ interface Product {
     productName: string;
     stock: number;
     sold: number;
+    price: number;
     created_at: string;
 }
 interface ProductsProps {
@@ -36,12 +37,7 @@ export default function Products({ products }: ProductsProps) {
 
             <div className="flex flex-1 flex-col gap-6 p-6">
                 {/* Header */}
-                <Header
-                    title="Products"
-                    btnText="Add Product"
-                    btnLink="/products/create"
-                    btnIcon={<Plus className="h-4 w-4" />}
-                />
+                <Header title="Products" btnText="Add Product" btnLink="/products/create" btnIcon={<Plus className="h-4 w-4" />} />
 
                 {/* Products Table */}
                 <Card>
@@ -59,6 +55,7 @@ export default function Products({ products }: ProductsProps) {
                                     <TableHead>Product Name</TableHead>
                                     <TableHead>Stock</TableHead>
                                     <TableHead>Sold</TableHead>
+                                    <TableHead>Price</TableHead>
                                     <TableHead className="">Actions</TableHead>
                                 </TableRow>
                             </TableHeader>
@@ -83,6 +80,7 @@ export default function Products({ products }: ProductsProps) {
                                             <TableCell className="font-medium">{product.productName}</TableCell>
                                             <TableCell>{product.stock}</TableCell>
                                             <TableCell>{product.sold}</TableCell>
+                                            <TableCell>{product.price}</TableCell>
                                             <TableCell>
                                                 <DropdownMenu>
                                                     <DropdownMenuTrigger asChild>

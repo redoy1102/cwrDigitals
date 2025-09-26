@@ -29,6 +29,7 @@ export default function EditProduct({ product }: { product: Product }) {
         productCategory: product.productCategory || 'GPT',
         productName: product.productName || '',
         stock: product.stock || '',
+        price: product.price || '',
     });
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -46,19 +47,15 @@ export default function EditProduct({ product }: { product: Product }) {
             <Head title="Edit Product" />
             <div className="flex flex-1 flex-col gap-6 p-6">
                 {/* Header */}
-                <Header
-                    title="Edit Product"
-                    btnText="All Products"
-                    btnLink="/products"
-                    btnIcon={<List className="h-4 w-4" />}
-                />
+                <Header title="Edit Product" btnText="All Products" btnLink="/products" btnIcon={<List className="h-4 w-4" />} />
 
                 <Form method="put" action={`/products/${product.id}`} onSubmit={handleSubmit} className="space-y-6">
                     {({ processing, recentlySuccessful, errors }) => (
                         <>
                             <input type="hidden" name="productCategory" value={data.productCategory} />
 
-                            <div className="flex items-center justify-between gap-4">
+                            <div className="grid grid-cols-1 items-center justify-between gap-4 md:grid-cols-2">
+                                {/* Product Category */}
                                 <div className="w-full">
                                     <Label htmlFor="productCategory">Product Category</Label>
                                     <Select value={data.productCategory} onValueChange={(value) => setData('productCategory', value)} required>
@@ -75,7 +72,7 @@ export default function EditProduct({ product }: { product: Product }) {
                                     </Select>
                                     <InputError className="mt-2" message={errors.productCategory} />
                                 </div>
-
+                                {/* Product name */}
                                 <div className="w-full">
                                     <Label htmlFor="productName">Product name</Label>
                                     <Input
@@ -90,26 +87,42 @@ export default function EditProduct({ product }: { product: Product }) {
                                     />
                                     <InputError className="mt-2" message={errors.productName} />
                                 </div>
-                            </div>
-
-                            <div className="">
-                                <Label htmlFor="stock">Stock</Label>
-                                <Input
-                                    id="stock"
-                                    type="number"
-                                    className="mt-1 block w-full"
-                                    name="stock"
-                                    required
-                                    autoComplete="stock"
-                                    placeholder="Stock"
-                                    value={data.stock}
-                                    onChange={(e) => setData('stock', e.target.value)}
-                                />
-                                <InputError className="mt-2" message={errors.stock} />
+                                {/* Stock */}
+                                <div className="">
+                                    <Label htmlFor="stock">Stock</Label>
+                                    <Input
+                                        id="stock"
+                                        type="number"
+                                        className="mt-1 block w-full"
+                                        name="stock"
+                                        required
+                                        autoComplete="stock"
+                                        placeholder="Stock"
+                                        value={data.stock}
+                                        onChange={(e) => setData('stock', e.target.value)}
+                                    />
+                                    <InputError className="mt-2" message={errors.stock} />
+                                </div>
+                                {/* Price */}
+                                <div className="">
+                                    <Label htmlFor="price">Price</Label>
+                                    <Input
+                                        id="price"
+                                        type="number"
+                                        className="mt-1 block w-full"
+                                        name="price"
+                                        required
+                                        autoComplete="price"
+                                        placeholder="Price"
+                                        value={data.price}
+                                        onChange={(e) => setData('price', e.target.value)}
+                                    />
+                                    <InputError className="mt-2" message={errors.price} />
+                                </div>
                             </div>
 
                             <div className="flex items-center gap-4">
-                                <Button disabled={processing} className="cursor-pointer">
+                                <Button disabled={processing} className="w-full cursor-pointer md:w-1/8">
                                     Update
                                 </Button>
                                 <Transition
