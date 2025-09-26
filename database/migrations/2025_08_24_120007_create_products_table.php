@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('productCategory');
             $table->string('productName');
-            $table->integer('stock')->nullable();
+            $table->integer('stock');
             $table->integer('sold')->nullable();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();

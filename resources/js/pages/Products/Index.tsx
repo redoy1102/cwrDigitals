@@ -7,6 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import AppLayout from '@/layouts/app-layout';
 import { formateDate } from '@/lib/utils';
 import { Edit, MoreHorizontal, Plus, Trash2 } from 'lucide-react';
+import Header from '@/components/Header';
 // import { formateDate } from '@/lib/utils';
 
 const breadcrumbs = [
@@ -35,16 +36,12 @@ export default function Products({ products }: ProductsProps) {
 
             <div className="flex flex-1 flex-col gap-6 p-6">
                 {/* Header */}
-                <div className="flex items-center justify-between">
-                    <div>
-                        <h1 className="text-3xl font-bold tracking-tight">Products</h1>
-                        <p className="text-muted-foreground">Manage your product inventory and track sales</p>
-                    </div>
-                    <Button className="flex cursor-pointer items-center gap-2" onClick={() => router.visit('/products/create')}>
-                        <Plus className="h-4 w-4" />
-                        Add Product
-                    </Button>
-                </div>
+                <Header
+                    title="Products"
+                    btnText="Add Product"
+                    btnLink="/products/create"
+                    btnIcon={<Plus className="h-4 w-4" />}
+                />
 
                 {/* Products Table */}
                 <Card>

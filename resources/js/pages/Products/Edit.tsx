@@ -1,3 +1,4 @@
+import Header from '@/components/Header';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -45,16 +46,12 @@ export default function EditProduct({ product }: { product: Product }) {
             <Head title="Edit Product" />
             <div className="flex flex-1 flex-col gap-6 p-6">
                 {/* Header */}
-                <div className="flex items-center justify-between">
-                    <div>
-                        <h1 className="text-3xl font-bold tracking-tight">Edit Product</h1>
-                        <p className="text-muted-foreground">Update your product details below.</p>
-                    </div>
-                    <Button className="flex cursor-pointer items-center gap-2" onClick={() => router.visit('/products')}>
-                        <List className="h-4 w-4" />
-                        All Products
-                    </Button>
-                </div>
+                <Header
+                    title="Edit Product"
+                    btnText="All Products"
+                    btnLink="/products"
+                    btnIcon={<List className="h-4 w-4" />}
+                />
 
                 <Form method="put" action={`/products/${product.id}`} onSubmit={handleSubmit} className="space-y-6">
                     {({ processing, recentlySuccessful, errors }) => (
@@ -114,7 +111,7 @@ export default function EditProduct({ product }: { product: Product }) {
                             <div className="flex items-center gap-4">
                                 <Button disabled={processing} className="cursor-pointer">
                                     Update
-                                </Button> 
+                                </Button>
                                 <Transition
                                     show={recentlySuccessful}
                                     enter="transition ease-in-out"

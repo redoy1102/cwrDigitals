@@ -35,8 +35,7 @@ class ProductController extends Controller
 
         Product::create([
             'user_id' => Auth::id(),
-            'productCategory' => $validated['productCategory'],
-            'productName' => $validated['productName'],
+            ...$validated,
             'stock' => (int)$validated['stock'],
         ]);
 
